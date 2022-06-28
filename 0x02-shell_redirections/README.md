@@ -14,4 +14,12 @@
 12. What’s new
 13. Being unique is better than being perfect
 14. It must be in that file
-15. Count that word -> Display the number of lines that contain the pattern “bin” in the file /etc/passwd     
+15. Count that word -> Display the number of lines that contain the pattern “bin” in the file /etc/passw
+16. Display lines containing the pattern “root” and 3 lines after them in the file /etc/passwd.
+17.Display all the lines in the file /etc/passwd that do not contain the pattern “bin”.
+18. Letters only please
+19. Replace all characters A and c from input to Z and e respectively.
+20. Without C, you would live in hiago
+21. esreveR
+22. DJ Cut Killer
+23. d     

@@ -1,20 +1,16 @@
-# Install Nginx
-package { 'nginx':
-  ensure => present,
-}
+# Use Puppet to automate the task of creating a custom HTTP header response
 
-# Create custom Nginx configuration file
-file { '/etc/nginx/conf.d/custom_http_header.conf':
-  ensure  => file,
-  content => 'add_header X-Served-By $hostname;',
-  require => Package['nginx'],
+exec {'update':
+  command => '/usr/bin/apt-get update',
 }
-
-# Restart Nginx to apply changes
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  subscribe  => File['/etc/nginx/conf.d/custom_http_header.conf'],
-  refreshonly => true,
+-> package {'nginx':
+  ensure => 'present',
 }
-
+-> file_line { 'http_header':
+  path  => '/etc/nginx/nginx.conf',
+  match => 'http {',
+  line  => "http {\n\tadd_header X-Served-By \"${hostname}\";",
+}
+-> exec {'run':
+  command => '/usr/sbin/service nginx restart',
+}

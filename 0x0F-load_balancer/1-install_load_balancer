@@ -1,53 +1,28 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Create a script to install and configure HAProxy on lb-01 server
+# Configure HAProxy to send traffic to web-01 and web-02 servers
+# Distribute requests using a roundrobin algorithm
+# Make sure that HAProxy can be managed via an init script
+# Install and configure HAproxy on my lb-01 server.
+sudo apt-get -y update
+apt-get -y install haproxy
 
-# Update package list and upgrade existing packages
-sudo apt-get update
-sudo apt-get upgrade -y
+# edit config file
+server_config=\
+"
+frontend  ehoneah-frontend
+        bind *:80
+        mode http
+        default_backend ehoneah-backend
+backend ehoneah-backend
+        balance roundrobin
+        server 63210-web-01 100.25.19.204:80 check
+        server 63210-web-02 54.157.159.85:80 check
+"
+echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
-# Install HAproxy
-sudo apt-get install haproxy -y
+# enable haproxy to be started by init script
 
-# Backup original HAproxy configuration file
-sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 
-# Create new HAproxy configuration file
-sudo bash -c 'cat > /etc/haproxy/haproxy.cfg << EOL
-global
-    log /dev/log    local0
-    log /dev/log    local1 notice
-    chroot /var/lib/haproxy
-    stats timeout 30s
-    user haproxy
-    group haproxy
-    daemon
-
-defaults
-    log global
-    mode    http
-    option  httplog
-    option  dontlognull
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
-    errorfile 400 /etc/haproxy/errors/400.http
-    errorfile 403 /etc/haproxy/errors/403.http
-    errorfile 408 /etc/haproxy/errors/408.http
-    errorfile 500 /etc/haproxy/errors/500.http
-    errorfile 502 /etc/haproxy/errors/502.http
-    errorfile 503 /etc/haproxy/errors/503.http
-    errorfile 504 /etc/haproxy/errors/504.http
-
-frontend http-in
-    bind *:80
-    default_backend servers
-
-backend servers
-    balance roundrobin
-    server web-01 [STUDENT_ID]-web-01:80 check
-    server web-02 [STUDENT_ID]-web-02:80 check
-EOL'
-
-# Enable and start HAproxy service
-sudo systemctl enable haproxy
-sudo service haproxy start
-
+sudo service haproxy restart

@@ -1,0 +1,18 @@
+# Allow incoming traffic on port 80 (HTTP)
+sudo ufw allow 80/tcp
+
+# Redirect incoming traffic on port 8080 to port 80
+sudo ufw redirect 8080/tcp to 80/tcp
+
+# Enable the firewall
+sudo ufw enable
+sudo ufw --force reset
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw --force enable
+sudo ufw --force reload
+sudo ufw --force reload
+sudo ufw status numbered
+curl -sI web-01.holberton.online:80
+curl -sI web-01.holberton.online:8080
+

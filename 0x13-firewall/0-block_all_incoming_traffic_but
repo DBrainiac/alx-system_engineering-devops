@@ -1,4 +1,26 @@
-sudo ufw enable
+# Allow incoming traffic on port 22 (SSH)
 sudo ufw allow 22/tcp
-sudo ufw allow 443/tcp
+
+# Allow incoming traffic on port 80 (HTTP)
 sudo ufw allow 80/tcp
+
+# Allow incoming traffic on port 443 (HTTPS SSL)
+sudo ufw allow 443/tcp
+
+# Deny all incoming traffic by default
+sudo ufw default deny incoming
+
+# Allow all outgoing traffic
+sudo ufw default allow outgoing
+
+# Enable the firewall
+sudo ufw enable
+
+sudo ufw --force reset
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw --force enable
+sudo ufw --force reload
+sudo ufw --force reload
+sudo ufw status numbered
+

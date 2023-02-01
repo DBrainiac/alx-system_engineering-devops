@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# check if a user argument was passed
+if [ $# -eq 0 ]; then
+  echo "Error: Please provide a user argument."
+  exit 1
+fi
+
+# run whoami command under the user passed as argument
+sudo -u "$1" whoami
+
